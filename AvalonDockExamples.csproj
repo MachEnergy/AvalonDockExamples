@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -101,6 +102,75 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Save_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Open_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Add_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ASX_Add_blue_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Path_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Cloud_blue_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ShapeArcPie_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ShapeArcRing_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Workflow_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="3DCameraOrbit_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AbstractClass_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AbstractCube_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Select_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="SelectAll_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Search_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="SearchStatusBar1_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Action_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="AddEvent_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NewWeb_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="DeleteFolder_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CloseDocument_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NotificationAlert_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="PopOut_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

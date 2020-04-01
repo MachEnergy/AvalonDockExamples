@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
+using System.Windows.Shapes;
+using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.Toolkit;
 
@@ -12,20 +19,53 @@ namespace AvalonDockExamples
   /// <summary>
   /// Interaction logic for MainWindow.xaml
   /// </summary>
-  public partial class MainWindow : Window
+  public partial class MainWindow : Window, INotifyPropertyChanged
   {
-    public List<MaterialToast> AllToasts = new List<MaterialToast>();
+    private ObservableCollection<MaterialToast> m_AllToasts;
+    public ObservableCollection<MaterialToast> AllToasts
+    {
+      get { return m_AllToasts; }
+      set 
+      { 
+        m_AllToasts = value; 
+        OnPropertyChanged("AllToasts");
+
+        AllToasts.CollectionChanged -= AllToasts_CollectionChanged;
+        AllToasts.CollectionChanged += AllToasts_CollectionChanged;
+      }
+    }
+
+    private void AllToasts_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      OnPropertyChanged("AllToasts");
+      NumToasts = AllToasts.Count.ToString();
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    public void OnPropertyChanged(string propertyName)
+    {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private string m_NumToasts;
+    public string NumToasts
+    {
+      get { return m_NumToasts; }
+      set { m_NumToasts = value; OnPropertyChanged("NumToasts"); }
+    }
 
     public MainWindow()
     {
       InitializeComponent();
+      AllToasts = new ObservableCollection<MaterialToast>();
+      NumToasts = AllToasts.Count.ToString();
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
       using (var writer = new StreamWriter("AvalonDockSavedFile.txt"))
       {
-        var layoutSerializer = new XmlLayoutSerializer(_dockingManager);
+        var layoutSerializer = new XmlLayoutSerializer(_newDockingManager);
         layoutSerializer.Serialize(writer);
       }
     }
@@ -34,7 +74,7 @@ namespace AvalonDockExamples
     {
       using (var reader = new StreamReader("AvalonDockSavedFile.txt"))
       {
-        var layoutSerializer = new XmlLayoutSerializer(_dockingManager);
+        var layoutSerializer = new XmlLayoutSerializer(_newDockingManager);
         layoutSerializer.Deserialize(reader);
       }
     }
@@ -53,12 +93,27 @@ namespace AvalonDockExamples
 
     private void ToastButton_Click(object sender, RoutedEventArgs e)
     {
-      MaterialToast newToast = new MaterialToast(ToastGrid);
-      newToast.Content = "I am inside the Application!";
-      newToast.DisplayTime = new TimeSpan(0, 0, 1);
+      //MaterialToast newToast = new MaterialToast(ToastStackPanel);
+      MaterialToast newToast = new MaterialToast(ToastItemsControl);
+      //MaterialToast newToast = new MaterialToast(ToastScrollViewer);
+
+      //newToast.DisplayTime = new TimeSpan(0, 0, 1);
       newToast.HideCompleted += NewToast_HideCompleted;
       newToast.IsCloseButtonVisible = true;
-      newToast.HideOnClick = false;
+      newToast.HideOnClick = true;
+      newToast.ToolTip = DateTime.Now.ToString();
+
+      //newToast.Content = Resources["ToastContent"]; // [System.Windows.ControlTemplate]
+      //newToast.Template = (ControlTemplate)Resources["ToastContent"]; // Replaced style, lost close button
+      //newToast.Content = "This is my content."; // Embeds string inside xceed toast
+      //newToast.Content = new Rectangle() { Width = 20, Height = 20, Fill = Brushes.Aqua }; // Embeds aqua rect inside xceed toast
+
+      StackPanel toastStack = new StackPanel();
+      toastStack.Orientation = Orientation.Vertical;
+      toastStack.Children.Add(new TextBlock() { Text = "This is my Title" });
+      toastStack.Children.Add(new TextBlock() { Text = "This is my Content" });
+      toastStack.Children.Add(new TextBlock() { Text = DateTime.Now.TimeOfDay.ToString(@"mm\:ss\.ff") });
+      newToast.Content = toastStack;
 
       if (NotificationLayoutAnchor.IsHidden)
       {
@@ -75,6 +130,35 @@ namespace AvalonDockExamples
       if (AllToasts.Count == 0)
       {
         NotificationLayoutAnchor.Hide();
+      }
+    }
+
+    private void NumToastsButton_Click(object sender, RoutedEventArgs e)
+    {
+      // After user has manually closed the anchor, we need to re-add it to display it
+      if (NotificationLayoutAnchor.Parent == null)
+      {
+        NotificationLayoutAnchor.Parent = NotificationLayoutAnchorParent;
+        NotificationLayoutAnchorParent.Children.Add(NotificationLayoutAnchor);
+      }
+
+      if (NotificationLayoutAnchor.IsAutoHidden)
+      {
+        NotificationLayoutAnchor.ToggleAutoHide();
+      }
+
+      if (!NotificationLayoutAnchor.IsVisible || NotificationLayoutAnchor.IsHidden)
+      {
+        NotificationLayoutAnchor.Show();
+      }
+    }
+
+    private void ClearAllNotificationsButton_Click(object sender, RoutedEventArgs e)
+    {
+      List<MaterialToast> toastsToRemove = AllToasts.ToList();
+      foreach (MaterialToast toast in toastsToRemove)
+      {
+        toast.HideToast();
       }
     }
   }

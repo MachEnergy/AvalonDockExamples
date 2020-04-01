@@ -7,9 +7,49 @@
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
         mc:Ignorable="d"        
-        Title="MainWindow" 
+        Title="Just a Roundabout Manager" 
         Height="450" Width="800">
+
+  <Window.Resources>
+    <XmlDataProvider x:Key="MockList" XPath="/MockObjects/*">
+      <x:XData>
+        <MockObjects xmlns="">
+          <MockObject Name="MockName1" Letter="A" Number="1" Day="Monday" Color="Blue" Message="This is a message" Animal="Cat" Movie="Die Hard" Useful="No"/>
+          <MockObject Name="MockName2" Letter="A" Number="111" Day="Tuesday" Color="Green" Message="This is also a message" Animal="Dog" Movie="Die Hard 2" Useful="Yes"/>
+          <MockObject Name="MockName3" Letter="B" Number="11" Day="Wednesday" Color="Blue" Message="This is a message." Animal="Cat" Movie="Die Hard" Useful="No"/>
+          <MockObject Name="MockName4" Letter="B" Number="01" Day="Thursday" Color="Blue" Message="This is a message..." Animal="Cat" Movie="Die Hard 3" Useful="No"/>
+          <MockObject Name="MockName5" Letter="A" Number="0" Day="Friday" Color="Red" Message="This, is a message" Animal="Dog" Movie="Die Hard" Useful="Yes"/>
+          <MockObject Name="MockName6" Letter="B" Number="10" Day="Saturday" Color="Black" Message="This, is CNN" Animal="Bird" Movie="Die Hard 3" Useful="No"/>
+          <MockObject Name="MockName7" Letter="A" Number="110" Day="Sunday" Color="White" Message="Data" Animal="Dog" Movie="Die Hard 3" Useful="No"/>
+          <MockObject Name="MockName8" Letter="B" Number="1111" Day="Monday" Color="Blue" Message="More" Animal="Fish" Movie="Die Hard" Useful="Yes"/>
+        </MockObjects>
+      </x:XData>
+    </XmlDataProvider>
+
+    <ControlTemplate x:Key="ToastContent" TargetType="{x:Type xctk:MaterialToast}">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition/>
+          <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Rectangle Fill="Pink"/>
+        <ContentPresenter Content="{Binding}">
+          <ContentPresenter.ContentTemplate>
+            <DataTemplate>
+              <StackPanel>
+                <TextBlock Grid.Row="0" Text="Toast Title"/>
+                <TextBlock Grid.Row="1" Text="This is the message."/>
+              </StackPanel>
+            </DataTemplate>
+          </ContentPresenter.ContentTemplate>
+        </ContentPresenter>
+      </Grid>
+    </ControlTemplate>
+  </Window.Resources>
+
   <Grid>
     <Grid.RowDefinitions>
       <!-- Menu -->
@@ -20,7 +60,7 @@
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <Menu Grid.Row="0">
+    <!--<Menu Grid.Row="0">
       <xcad:MenuItemEx Header="File">
         <xcad:MenuItemEx Header="Save Workspace" Click="SaveButton_Click"/>
         <xcad:MenuItemEx Header="Load Workspace" Click="LoadButton_Click"/>
@@ -30,7 +70,67 @@
         <xcad:MenuItemEx Header="Xceed Sample" Click="ViewXceed_Click"/>
       </xcad:MenuItemEx>
       <xcad:MenuItemEx Header="Help"/>
-    </Menu>
+    </Menu>-->
+
+    <Ribbon>
+      <Ribbon.QuickAccessToolBar>
+        <RibbonQuickAccessToolBar>
+          <RibbonMenuButton SmallImageSource="Save_16x.png"/>
+          <RibbonMenuButton SmallImageSource="DeleteFolder_16x.png"/>
+          <RibbonMenuButton SmallImageSource="CloseDocument_16x.png"/>
+        </RibbonQuickAccessToolBar>
+      </Ribbon.QuickAccessToolBar>
+
+      <Ribbon.ApplicationMenu>
+        <RibbonApplicationMenu>
+          <RibbonApplicationMenuItem Header="Add"/>
+          <RibbonApplicationMenuItem Header="Settings"/>
+        </RibbonApplicationMenu>
+      </Ribbon.ApplicationMenu>
+
+      <RibbonTab Header="Tab1">
+        <RibbonGroup Header="Select">
+          <RibbonButton Label="All" LargeImageSource="Select_16x.png"/>
+          <RibbonButton Label="None" LargeImageSource="SelectAll_16x.png"/>
+        </RibbonGroup>
+        <RibbonGroup Header="General">
+          <RibbonButton Label="Save" LargeImageSource="Save_16x.png"/>
+          <RibbonButton Label="Open" LargeImageSource="Open_16x.png"/>
+        </RibbonGroup>
+        <RibbonGroup Header="Create">
+          <RibbonButton Label="A" LargeImageSource="Add_16x.png"/>
+          <RibbonButton Label="B" LargeImageSource="ASX_Add_blue_16x.png"/>
+        </RibbonGroup>
+        <RibbonGroup Header="General">
+          <RibbonButton Label="Path" LargeImageSource="Path_16x.png"/>
+          <RibbonButton Label="Weather" LargeImageSource="Cloud_blue_16x.png"/>
+        </RibbonGroup>
+        <RibbonGroup Header="General">
+          <RibbonButton Label="Thing1" LargeImageSource="ShapeArcPie_16x.png"/>
+          <RibbonButton Label="Thing2" LargeImageSource="ShapeArcRing_16x.png"/>
+          <RibbonButton Label="Thing3" LargeImageSource="Workflow_16x.png"/>
+          <RibbonButton Label="Thing4" LargeImageSource="3DCameraOrbit_16x.png"/>
+          <RibbonButton Label="Thing5" LargeImageSource="AbstractClass_16x.png"/>
+          <RibbonButton Label="Thing6" LargeImageSource="AbstractCube_16x.png"/>
+          <RibbonButton Label="Thing7" LargeImageSource="Search_16x.png"/>
+          <RibbonButton Label="Thing8" LargeImageSource="SearchStatusBar1_16x.png"/>
+          <RibbonButton Label="Thing9" LargeImageSource="Action_16x.png"/>
+          <RibbonButton Label="Thing10" LargeImageSource="AddEvent_16x.png"/>
+          <RibbonButton Label="Thing11" LargeImageSource="NewWeb_16x.png"/>
+        </RibbonGroup>
+      </RibbonTab>
+
+      <RibbonTab Header="Tab2">
+        <RibbonGroup Header="Other Group">
+          <RibbonButton Label="Play"/>
+          <RibbonButton Label="List"/>
+        </RibbonGroup>
+        <RibbonGroup Header="What a group">
+          <RibbonButton Label="Sleep"/>
+          <RibbonButton Label="Add"/>
+        </RibbonGroup>
+      </RibbonTab>
+    </Ribbon>
 
     <Grid Grid.Row="1">
       <Grid.RowDefinitions>
@@ -54,80 +154,163 @@
               </StackPanel>
             </DataTemplate>
           </xcad:DockingManager.DocumentHeaderTemplate>
-          
+
           <xcad:LayoutRoot x:Name="_newLayoutRoot">
             <xcad:LayoutPanel>
-              <xcad:LayoutAnchorablePane DockWidth="200">
-                <xcad:LayoutAnchorable ContentId="properties"
-                                     Title="Properties"
-                                     CanHide="False"
-                                     CanClose="False"
-                                     AutoHideWidth="240">
-                  <!--IconSource="../Images/property-blue.png">-->
-                  <xctk:PropertyGrid NameColumnWidth="110"
-                                   SelectedObject="{Binding ElementName=_layoutRoot, Path=LastFocusedDocument.Content}"
-                                   AutoGenerateProperties="False">
-                    <xctk:PropertyGrid.PropertyDefinitions>
-                      <xctk:PropertyDefinition TargetProperties="Background" />
-                      <xctk:PropertyDefinition TargetProperties="BorderBrush" />
-                      <xctk:PropertyDefinition TargetProperties="BorderThickness" />
-                      <xctk:PropertyDefinition TargetProperties="FontSize" />
-                      <xctk:PropertyDefinition TargetProperties="FontStyle" />
-                      <xctk:PropertyDefinition TargetProperties="Width" />
-                      <xctk:PropertyDefinition TargetProperties="Height" />
-                    </xctk:PropertyGrid.PropertyDefinitions>
-                  </xctk:PropertyGrid>
-                </xcad:LayoutAnchorable>
-              </xcad:LayoutAnchorablePane>
-              
               <xcad:LayoutDocumentPaneGroup>
                 <xcad:LayoutDocumentPane>
-                  <xcad:LayoutDocument ContentId="document1"
-                                     Title="Document 1">
+                  <xcad:LayoutDocument ContentId="documentSummary"
+                                       Title="Summary">
                     <!--IconSource="../Images/document.png">-->
-                    <Button Content="Document 1 Content"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center" 
-                            Click="ToastButton_Click"/>
+                    <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
+                              ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
+                              AutoGenerateColumns="False"
+                              AlternatingRowBackground="AliceBlue">
+                      <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
+                        <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
+                        <DataGridTextColumn Header="Animal" Binding="{Binding XPath=@Animal}"/>
+                        <DataGridTextColumn Header="Day" Binding="{Binding XPath=@Day}"/>
+                        <DataGridTextColumn Header="Color" Binding="{Binding XPath=@Color}"/>
+                        <DataGridTextColumn Header="Message" Binding="{Binding XPath=@Message}"/>
+                        <DataGridTextColumn Header="Movie" Binding="{Binding XPath=@Movie}"/>
+                        <DataGridTextColumn Header="Useful" Binding="{Binding XPath=@Useful}"/>
+                      </DataGrid.Columns>
+                    </DataGrid>
                   </xcad:LayoutDocument>
-                  <xcad:LayoutDocument ContentId="document2"
-                                     Title="Document 2">
-                    <!--IconSource="../Images/document.png">-->
-                    <TextBox Text="Document 2 Content"
-                           AcceptsReturn="True" />
-                  </xcad:LayoutDocument>
-                </xcad:LayoutDocumentPane>
-              </xcad:LayoutDocumentPaneGroup >
 
-              <xcad:LayoutAnchorablePaneGroup DockWidth="125">
-                <xcad:LayoutAnchorablePane>
+                  <xcad:LayoutDocument ContentId="documentTarget"
+                                       Title="Target">
+                    <!--IconSource="../Images/document.png">-->
+                    <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
+                              ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
+                              AutoGenerateColumns="False">
+                      <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
+                        <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
+                        <DataGridTextColumn Header="Day" Binding="{Binding XPath=@Day}"/>
+                        <DataGridTextColumn Header="Color" Binding="{Binding XPath=@Color}"/>
+                        <DataGridTextColumn Header="Movie" Binding="{Binding XPath=@Movie}"/>
+                      </DataGrid.Columns>
+                    </DataGrid>
+                  </xcad:LayoutDocument>
+
+                  <xcad:LayoutDocument ContentId="documentRelease"
+                                       Title="Release">
+                    <!--IconSource="../Images/document.png">-->
+                    <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
+                              ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
+                              AutoGenerateColumns="False">
+                      <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
+                        <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
+                        <DataGridTextColumn Header="Day" Binding="{Binding XPath=@Day}"/>
+                        <DataGridTextColumn Header="Color" Binding="{Binding XPath=@Color}"/>
+                        <DataGridTextColumn Header="Message" Binding="{Binding XPath=@Message}"/>
+                        <DataGridTextColumn Header="Useful" Binding="{Binding XPath=@Useful}"/>
+                      </DataGrid.Columns>
+                    </DataGrid>
+                  </xcad:LayoutDocument>
+
+                  <xcad:LayoutDocument ContentId="documentWPInfo"
+                                       Title="WPInfo">
+                    <!--IconSource="../Images/document.png">-->
+                    <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
+                              ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
+                              AutoGenerateColumns="False">
+                      <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
+                        <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
+                        <DataGridTextColumn Header="Day" Binding="{Binding XPath=@Day}"/>
+                        <DataGridTextColumn Header="Message" Binding="{Binding XPath=@Message}"/>
+                      </DataGrid.Columns>
+                    </DataGrid>
+                  </xcad:LayoutDocument>
+
+                  <xcad:LayoutDocument ContentId="documentIzzyLarry"
+                                       Title="IzzyLarry">
+                    <!--IconSource="../Images/document.png">-->
+                    <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
+                              ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
+                              AutoGenerateColumns="False">
+                      <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
+                        <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
+                        <DataGridTextColumn Header="Animal" Binding="{Binding XPath=@Animal}"/>
+                        <DataGridTextColumn Header="Movie" Binding="{Binding XPath=@Movie}"/>
+                        <DataGridTextColumn Header="Useful" Binding="{Binding XPath=@Useful}"/>
+                      </DataGrid.Columns>
+                    </DataGrid>
+                  </xcad:LayoutDocument>
+
+                  <xcad:LayoutDocument ContentId="documentDeconflection"
+                                       Title="Deconflection">
+                    <!--IconSource="../Images/document.png">-->
+                    <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
+                              ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
+                              AutoGenerateColumns="False">
+                      <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
+                        <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
+                        <DataGridTextColumn Header="Movie" Binding="{Binding XPath=@Movie}"/>
+                      </DataGrid.Columns>
+                    </DataGrid>
+                  </xcad:LayoutDocument>
+
+                </xcad:LayoutDocumentPane>
+
+              </xcad:LayoutDocumentPaneGroup>
+
+            </xcad:LayoutPanel>
+
+            <xcad:LayoutRoot.RightSide>
+              <xcad:LayoutAnchorSide>
+                <xcad:LayoutAnchorGroup x:Name="NotificationLayoutAnchorParent">
                   <xcad:LayoutAnchorable ContentId="notifications"
                                          Title="Notifications"
                                          x:Name="NotificationLayoutAnchor"
-                                         CanClose="True"
+                                         CanClose="False"
                                          CanAutoHide="True"
-                                         IsVisible="False">
-                    <!--IconSource="../Images/alarm-clock-blue.png">-->
-                    <Grid x:Name="ToastGrid"/>
-                  </xcad:LayoutAnchorable>
-                </xcad:LayoutAnchorablePane>
-              </xcad:LayoutAnchorablePaneGroup>
+                                         IsVisible="False"
+                                         IconSource="NotificationAlert_16x.png">
+                    <Grid>
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                      </Grid.RowDefinitions>
 
-            </xcad:LayoutPanel>
+                      <xctk:MaterialButton Height="20"
+                                           Width="Auto"
+                                           Margin="5"
+                                           Content="Clear All"
+                                           Click="ClearAllNotificationsButton_Click"/>
+
+                      <ScrollViewer Grid.Row="1"
+                                    x:Name="ToastScrollViewer">
+                        <ListView ItemsSource="{Binding AllToasts}"
+                                      x:Name="ToastItemsControl"/>
+                        <!--<StackPanel Orientation="Vertical"
+                                    x:Name="ToastStackPanel"/>-->
+                      </ScrollViewer>
+                    </Grid>
+                  </xcad:LayoutAnchorable>
+                </xcad:LayoutAnchorGroup>
+              </xcad:LayoutAnchorSide>
+            </xcad:LayoutRoot.RightSide>
 
           </xcad:LayoutRoot>
         </xcad:DockingManager>
       </Grid>
 
-      
-      
-      
-      
-      
-      
-      
-      
-      
+
+
+
+
+
+
+
+
+
       <Grid Grid.Row="1">
         <xcad:DockingManager x:Name="_dockingManager"
                              Visibility="Collapsed"
@@ -242,12 +425,40 @@
           </xcad:LayoutRoot>
         </xcad:DockingManager>
       </Grid>
+
+
+
+
+
+
+
+
     </Grid>
 
     <StatusBar Grid.Row="2" Height="Auto">
-      <StatusBarItem x:Name="StatusBarNotificationButton" HorizontalAlignment="Right">
-        <xctk:IconButton Height="20" Width="20" Content="{Binding NumToasts}"/>
+      
+      <StatusBarItem x:Name="StatusBarNotificationButton" DockPanel.Dock="Right">
+        <xctk:IconButton Height="20" Width="30" Click="NumToastsButton_Click">
+          <xctk:IconButton.Icon>
+            <Image Source="NotificationAlert_16x.png"/>
+          </xctk:IconButton.Icon>
+          <TextBlock Text="{Binding NumToasts, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
+        </xctk:IconButton>
       </StatusBarItem>
+
+      <StatusBarItem DockPanel.Dock="Right">
+        <TextBlock Text="Selected Rows: 3"/>
+      </StatusBarItem>
+
+      <StatusBarItem x:Name="StatusBarToastButton" DockPanel.Dock="Right">
+        <xctk:IconButton Height="20" Margin ="2" Padding ="10,0" Click="ToastButton_Click">
+          <xctk:IconButton.Icon>
+            <Image Source="PopOut_16x.png"/>
+          </xctk:IconButton.Icon>
+          <TextBlock Text="Pop A Toast!"/>
+        </xctk:IconButton>
+      </StatusBarItem>
+
     </StatusBar>
   </Grid>
 </Window>
