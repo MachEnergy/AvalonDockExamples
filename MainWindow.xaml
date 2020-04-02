@@ -10,7 +10,7 @@
         xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
         mc:Ignorable="d"        
         Title="Just a Roundabout Manager" 
-        Height="450" Width="800">
+        Height="600" Width="940">
 
   <Window.Resources>
     <XmlDataProvider x:Key="MockList" XPath="/MockObjects/*">
