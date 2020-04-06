@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Shapes;
+using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.Toolkit;
@@ -25,9 +26,9 @@ namespace AvalonDockExamples
     public ObservableCollection<MaterialToast> AllToasts
     {
       get { return m_AllToasts; }
-      set 
-      { 
-        m_AllToasts = value; 
+      set
+      {
+        m_AllToasts = value;
         OnPropertyChanged("AllToasts");
 
         AllToasts.CollectionChanged -= AllToasts_CollectionChanged;
@@ -93,9 +94,11 @@ namespace AvalonDockExamples
 
     private void ToastButton_Click(object sender, RoutedEventArgs e)
     {
-      //MaterialToast newToast = new MaterialToast(ToastStackPanel);
-      MaterialToast newToast = new MaterialToast(ToastItemsControl);
-      //MaterialToast newToast = new MaterialToast(ToastScrollViewer);
+      //MaterialToast newToast = new MaterialToast();
+      //ToastListView.Items.Add(newToast);
+      MaterialToast newToast = new MaterialToast();
+      //ToastItemsControl.Items.Add(newToast);
+      AllToasts.Add(newToast);
 
       //newToast.DisplayTime = new TimeSpan(0, 0, 1);
       newToast.HideCompleted += NewToast_HideCompleted;
@@ -107,26 +110,33 @@ namespace AvalonDockExamples
       //newToast.Template = (ControlTemplate)Resources["ToastContent"]; // Replaced style, lost close button
       //newToast.Content = "This is my content."; // Embeds string inside xceed toast
       //newToast.Content = new Rectangle() { Width = 20, Height = 20, Fill = Brushes.Aqua }; // Embeds aqua rect inside xceed toast
+      
+      ////////// WORKS VIA XAML ////////////////////
+      newToast.ContentTemplate = (DataTemplate)Resources["ToastContent"];
+      //////////////////////////////////////////////////////////
 
-      StackPanel toastStack = new StackPanel();
-      toastStack.Orientation = Orientation.Vertical;
-      toastStack.Children.Add(new TextBlock() { Text = "This is my Title" });
-      toastStack.Children.Add(new TextBlock() { Text = "This is my Content" });
-      toastStack.Children.Add(new TextBlock() { Text = DateTime.Now.TimeOfDay.ToString(@"mm\:ss\.ff") });
-      newToast.Content = toastStack;
+      ////////// WORKS VIA FULL CODE BEHIND ////////////////////
+      //StackPanel toastStack = new StackPanel();
+      //toastStack.Orientation = Orientation.Vertical;
+      //toastStack.Children.Add(new TextBlock() { Text = "This is my Title" });
+      //toastStack.Children.Add(new TextBlock() { Text = "This is my Content" });
+      //toastStack.Children.Add(new TextBlock() { Text = DateTime.Now.TimeOfDay.ToString(@"mm\:ss\.ff") });
+      //newToast.Content = toastStack;
+      //////////////////////////////////////////////////////////
 
       if (NotificationLayoutAnchor.IsHidden)
       {
         NotificationLayoutAnchor.Show();
       }
       
-      AllToasts.Add(newToast);
       newToast.ShowToast();
     }
 
     private void NewToast_HideCompleted(object sender, RoutedEventArgs e)
     {
+      ToastItemsControl.Items.Remove(sender);
       AllToasts.Remove((MaterialToast)sender);
+
       if (AllToasts.Count == 0)
       {
         NotificationLayoutAnchor.Hide();
@@ -160,6 +170,23 @@ namespace AvalonDockExamples
       {
         toast.HideToast();
       }
+    }
+
+    private void NotificationLayoutAnchor_IsVisibleChanged(object sender, EventArgs e)
+    {
+      //if (NotificationLayoutAnchor.IsVisible)
+      //{
+      //  if (AllToasts != null)
+      //  {
+      //    foreach (MaterialToast toast in AllToasts)
+      //    {
+      //      if (toast?.IsVisible == false)
+      //      {
+      //        toast?.ShowToast();
+      //      }
+      //    }
+      //  }
+      //}
     }
   }
 }

@@ -28,7 +28,7 @@
       </x:XData>
     </XmlDataProvider>
 
-    <ControlTemplate x:Key="ToastContent" TargetType="{x:Type xctk:MaterialToast}">
+    <DataTemplate x:Key="ToastContent">
       <Grid>
         <Grid.RowDefinitions>
           <RowDefinition/>
@@ -40,14 +40,14 @@
           <ContentPresenter.ContentTemplate>
             <DataTemplate>
               <StackPanel>
-                <TextBlock Grid.Row="0" Text="Toast Title"/>
-                <TextBlock Grid.Row="1" Text="This is the message."/>
+                <TextBlock Grid.Row="0" Text="Template Toast Title"/>
+                <TextBlock Grid.Row="1" Text="This is a template message."/>
               </StackPanel>
             </DataTemplate>
           </ContentPresenter.ContentTemplate>
         </ContentPresenter>
       </Grid>
-    </ControlTemplate>
+    </DataTemplate>
   </Window.Resources>
 
   <Grid>
@@ -159,13 +159,17 @@
             <xcad:LayoutPanel>
               <xcad:LayoutDocumentPaneGroup>
                 <xcad:LayoutDocumentPane>
+
                   <xcad:LayoutDocument ContentId="documentSummary"
                                        Title="Summary">
                     <!--IconSource="../Images/document.png">-->
                     <DataGrid DataContext="{Binding Source={StaticResource MockList}}"
                               ItemsSource="{Binding Mode=Default, XPath=/MockObjects/MockObject}"
                               AutoGenerateColumns="False"
-                              AlternatingRowBackground="AliceBlue">
+                              AlternatingRowBackground="AliceBlue"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              x:Name="SummaryDataGrid">
                       <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding XPath=@Name}"/>
                         <DataGridTextColumn Header="Letter" Binding="{Binding XPath=@Letter}"/>
@@ -263,6 +267,36 @@
 
             </xcad:LayoutPanel>
 
+
+            <xcad:LayoutRoot.LeftSide>
+              <xcad:LayoutAnchorSide>
+                <xcad:LayoutAnchorGroup>
+                  <xcad:LayoutAnchorable ContentId="properties"
+                                         Title="Properties"
+                                         CanHide="False"
+                                         CanClose="False"
+                                         AutoHideWidth="240">
+                    <!--IconSource="../Images/property-blue.png">-->
+                    <xctk:PropertyGrid NameColumnWidth="110"
+                                       AutoGenerateProperties="False"
+                                       SelectedObject="{Binding ElementName=SummaryDataGrid, Path=SelectedValue}">
+                      <xctk:PropertyGrid.PropertyDefinitions>
+                        <xctk:PropertyDefinition TargetProperties="Name" />
+                        <xctk:PropertyDefinition TargetProperties="Letter" />
+                        <xctk:PropertyDefinition TargetProperties="Number" />
+                        <xctk:PropertyDefinition TargetProperties="Day" />
+                        <xctk:PropertyDefinition TargetProperties="Color" />
+                        <xctk:PropertyDefinition TargetProperties="Message" />
+                        <xctk:PropertyDefinition TargetProperties="Animal" />
+                        <xctk:PropertyDefinition TargetProperties="Movie" />
+                        <xctk:PropertyDefinition TargetProperties="Useful" />
+                      </xctk:PropertyGrid.PropertyDefinitions>
+                    </xctk:PropertyGrid>
+                  </xcad:LayoutAnchorable>                  
+                </xcad:LayoutAnchorGroup>
+              </xcad:LayoutAnchorSide>
+            </xcad:LayoutRoot.LeftSide>
+            
             <xcad:LayoutRoot.RightSide>
               <xcad:LayoutAnchorSide>
                 <xcad:LayoutAnchorGroup x:Name="NotificationLayoutAnchorParent">
@@ -272,7 +306,7 @@
                                          CanClose="False"
                                          CanAutoHide="True"
                                          IsVisible="False"
-                                         IconSource="NotificationAlert_16x.png">
+                                         IconSource="NotificationAlert_16x.png" IsVisibleChanged="NotificationLayoutAnchor_IsVisibleChanged">
                     <Grid>
                       <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -285,12 +319,21 @@
                                            Content="Clear All"
                                            Click="ClearAllNotificationsButton_Click"/>
 
-                      <ScrollViewer Grid.Row="1"
-                                    x:Name="ToastScrollViewer">
-                        <ListView ItemsSource="{Binding AllToasts}"
-                                      x:Name="ToastItemsControl"/>
-                        <!--<StackPanel Orientation="Vertical"
-                                    x:Name="ToastStackPanel"/>-->
+                      <ScrollViewer Grid.Row="1" 
+                                    HorizontalScrollBarVisibility="Auto" 
+                                    VerticalScrollBarVisibility="Auto"
+                                    VerticalAlignment="Stretch">
+                        <ItemsControl x:Name="ToastItemsControl"
+                                      VerticalAlignment="Stretch"
+                                      ItemsSource="{Binding AllToasts, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}">
+                          <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                              <xctk:MaterialToast Content="{Binding}">
+                                <!--<ContentControl ContentTemplate="{StaticResource ToastContent}"/>-->
+                              </xctk:MaterialToast>
+                            </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                       </ScrollViewer>
                     </Grid>
                   </xcad:LayoutAnchorable>
@@ -436,7 +479,7 @@
     </Grid>
 
     <StatusBar Grid.Row="2" Height="Auto">
-      
+
       <StatusBarItem x:Name="StatusBarNotificationButton" DockPanel.Dock="Right">
         <xctk:IconButton Height="20" Width="30" Click="NumToastsButton_Click">
           <xctk:IconButton.Icon>
