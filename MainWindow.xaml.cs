@@ -22,8 +22,8 @@ namespace AvalonDockExamples
   /// </summary>
   public partial class MainWindow : Window, INotifyPropertyChanged
   {
-    private ObservableCollection<MaterialToast> m_AllToasts;
-    public ObservableCollection<MaterialToast> AllToasts
+    private ObservableCollection<MaterialFrame> m_AllToasts;
+    public ObservableCollection<MaterialFrame> AllToasts
     {
       get { return m_AllToasts; }
       set
@@ -58,7 +58,7 @@ namespace AvalonDockExamples
     public MainWindow()
     {
       InitializeComponent();
-      AllToasts = new ObservableCollection<MaterialToast>();
+      AllToasts = new ObservableCollection<MaterialFrame>();
       NumToasts = AllToasts.Count.ToString();
     }
 
@@ -82,13 +82,13 @@ namespace AvalonDockExamples
 
     private void ViewNewGUI_Click(object sender, RoutedEventArgs e)
     {
-      _dockingManager.Visibility = Visibility.Collapsed;
+      //_dockingManager.Visibility = Visibility.Collapsed;
       _newDockingManager.Visibility = Visibility.Visible;
     }
 
     private void ViewXceed_Click(object sender, RoutedEventArgs e)
     {
-      _dockingManager.Visibility = Visibility.Visible;
+      //_dockingManager.Visibility = Visibility.Visible;
       _newDockingManager.Visibility = Visibility.Collapsed;
     }
 
@@ -96,14 +96,16 @@ namespace AvalonDockExamples
     {
       //MaterialToast newToast = new MaterialToast();
       //ToastListView.Items.Add(newToast);
-      MaterialToast newToast = new MaterialToast();
-      //ToastItemsControl.Items.Add(newToast);
+      //MaterialToast newToast = new MaterialToast(ToastItemsControl);
+      //AllToasts.Add(newToast);
+      MaterialFrame newToast = new MaterialFrame();
       AllToasts.Add(newToast);
 
-      //newToast.DisplayTime = new TimeSpan(0, 0, 1);
-      newToast.HideCompleted += NewToast_HideCompleted;
-      newToast.IsCloseButtonVisible = true;
-      newToast.HideOnClick = true;
+
+      ////newToast.DisplayTime = new TimeSpan(0, 0, 1);
+      //newToast.HideCompleted += NewToast_HideCompleted;
+      //newToast.IsCloseButtonVisible = true;
+      //newToast.HideOnClick = true;
       newToast.ToolTip = DateTime.Now.ToString();
 
       //newToast.Content = Resources["ToastContent"]; // [System.Windows.ControlTemplate]
@@ -128,14 +130,26 @@ namespace AvalonDockExamples
       {
         NotificationLayoutAnchor.Show();
       }
-      
-      newToast.ShowToast();
+
+      if (ToastItemsControl.IsVisible)
+      {
+        //newToast.ShowToast();
+      }
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+      FrameworkElement fwe = sender as FrameworkElement;
+      if (fwe != null)
+      {
+        NewToast_HideCompleted(fwe.FindVisualAncestor<MaterialFrame>(), e);
+      }
     }
 
     private void NewToast_HideCompleted(object sender, RoutedEventArgs e)
     {
-      ToastItemsControl.Items.Remove(sender);
-      AllToasts.Remove((MaterialToast)sender);
+      //ToastItemsControl.Items.Remove(sender);
+      AllToasts.Remove((MaterialFrame)sender);
 
       if (AllToasts.Count == 0)
       {
@@ -165,11 +179,16 @@ namespace AvalonDockExamples
 
     private void ClearAllNotificationsButton_Click(object sender, RoutedEventArgs e)
     {
-      List<MaterialToast> toastsToRemove = AllToasts.ToList();
-      foreach (MaterialToast toast in toastsToRemove)
+      List<MaterialFrame> toastsToRemove = AllToasts.ToList();
+      foreach (MaterialFrame toast in toastsToRemove)
       {
-        toast.HideToast();
+        //toast.HideToast();
+        toast.Visibility = Visibility.Collapsed;
+        AllToasts.Remove(toast);
       }
+
+      toastsToRemove.Clear();
+      toastsToRemove = null;
     }
 
     private void NotificationLayoutAnchor_IsVisibleChanged(object sender, EventArgs e)
